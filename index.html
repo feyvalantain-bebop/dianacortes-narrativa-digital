@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El rastro de la cita fantasma</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#1f2a24;color:#fbf1d9;font:17px/1.55 "Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;display:grid;place-items:center;min-height:100vh}
+#st{position:relative;width:min(100vw,960px);aspect-ratio:16/10;overflow:hidden;background:#a9c6a3;border:5px solid #f3e4c4;border-radius:24px;box-shadow:0 12px 36px #0007}
+#st::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;background:radial-gradient(ellipse at 50% 40%,transparent 58%,#3a24184d 100%)}
+#bg,#bg svg,#hs{position:absolute;inset:0;width:100%;height:100%}
+#hs{z-index:1}#bg svg{display:block}
+#fd{position:absolute;inset:0;background:#f9e2b0;opacity:0;pointer-events:none;transition:opacity .45s;z-index:7}
+.pc{position:absolute;bottom:5%;width:13.5%;left:0;opacity:0;pointer-events:none;transition:opacity .4s,filter .3s;z-index:2;filter:drop-shadow(0 6px 5px #2b1a1266)}
+.pc.on{opacity:1}.pc.dim{filter:brightness(.72) drop-shadow(0 6px 5px #2b1a1266)}.pc.tk{pointer-events:auto;cursor:pointer}
+.pc svg{display:block;width:100%;overflow:visible}
+.l1,.l2,.a1,.a2{transform-box:view-box}.l1{transform-origin:81px 328px}.l2{transform-origin:119px 328px}.a1{transform-origin:37px 215px}.a2{transform-origin:163px 215px}
+.wk .l1,.wk .a2{animation:sw .5s infinite alternate ease-in-out}.wk .l2,.wk .a1{animation:sw .5s infinite alternate-reverse ease-in-out}
+@keyframes sw{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+.hs{position:absolute;top:28%;height:44%;background:none;border:0;box-shadow:none;border-radius:18px;padding:0}
+.hs:hover,.hs:focus-visible{background:#fff3c433;outline:3px dotted #fbf1d9}
+.hs::after{content:attr(aria-label);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#fbf1d9;color:#4a2f25;padding:2px 14px;border-radius:99px;font-size:.8rem;white-space:nowrap;opacity:0;pointer-events:none;box-shadow:0 2px 6px #0004}
+.hs:hover::after,.hs:focus-visible::after{opacity:1}
+.sr{position:absolute;top:19%;transform:translateX(-50%);font-size:1.8rem;color:#f0c75e;text-shadow:0 0 10px #fff8c8,0 2px 3px #4a2f25;animation:bn 1.1s infinite alternate ease-in-out;z-index:3;pointer-events:none}
+@keyframes bn{to{transform:translate(-50%,-9px)}}
+#rn{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);z-index:3;background:#2b3a30dd;padding:3px 16px;border-radius:99px;font-size:.82rem;white-space:nowrap;max-width:96%;overflow:hidden;text-overflow:ellipsis}
+#hud{position:absolute;top:0;left:0;right:0;display:flex;gap:10px;align-items:center;padding:8px 14px;z-index:5}
+#pb{flex:1;height:7px;background:#2b3a3099;border-radius:4px;overflow:hidden}#pb i{display:block;height:100%;width:0;background:#f2a65a;border-radius:4px;transition:width .4s}
+button{font:inherit;font-weight:700;color:#4a2f25;background:#fbf1d9;border:2px solid #8a5a36;border-radius:14px;padding:6px 14px;cursor:pointer;box-shadow:0 3px 0 #c9a97a}
+button:disabled{opacity:.4}button:focus-visible{outline:3px solid #f0c75e;outline-offset:2px}
+.pri{background:#f2a65a}
+#db{position:absolute;left:3%;right:3%;top:46px;min-height:88px;padding:16px 20px 10px;background:#fbf1d9;color:#4a2f25;border:3px solid #8a5a36;border-radius:18px;box-shadow:0 6px 18px #0005;cursor:pointer;display:none;z-index:5}
+#nm{position:absolute;top:-15px;left:16px;padding:1px 16px;border-radius:99px;border:2px solid #8a5a36;color:#4a2f25;font-weight:700}
+#tx{margin:4px 0 0}#db.n #tx{font-style:italic}
+#ar{position:absolute;right:14px;bottom:4px;color:#d9694f;animation:b 1s infinite}@keyframes b{50%{opacity:.2}}
+.ov{position:absolute;inset:0;z-index:6;background:#2b3a30f5;padding:20px 24px;overflow:auto;display:flex;flex-direction:column}
+.ov>:first-child{margin-top:auto}.ov>:last-child{margin-bottom:auto}.ov[hidden]{display:none}
+.ov.t{background:radial-gradient(circle at 50% 110%,#f2a65add,#2b3a30f2 62%);align-items:center;text-align:center}
+.ov.m{background:none;pointer-events:none;padding:12px}.ov.m>:last-child{margin-bottom:0}
+.mn{pointer-events:auto;background:#2b3a30ee;border:3px solid #f2a65a;border-radius:18px;padding:10px 16px}
+h1{font:700 2.2rem/1.15 Georgia,"Palatino Linotype",serif;margin:0 0 8px}h2{font:700 1.15rem/1.3 Georgia,serif;color:#f0c75e;margin:0 0 6px}
+.op{display:block;width:100%;text-align:left;margin:8px 0;padding:10px 16px;border-radius:16px}.op.on{background:#9ed0b0}
+.fb{margin:10px 0;padding:10px 14px;border-radius:14px;border:2px solid}.fb.ok{border-color:#9ed0b0;background:#35553f}.fb.no{border-color:#d9694f;background:#6a3a2e}
+code{background:#4a2f25;color:#fbf1d9;padding:1px 5px;border-radius:4px;font-size:.85rem;word-break:break-word}
+.cr{font-size:.85rem;line-height:1.7;text-align:left;max-width:640px}
+@media(max-width:700px){body{font-size:15px}h1{font-size:1.5rem}#db{min-height:70px;padding:12px 12px 8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div id="st"><div id="bg"></div><div id="hs"></div><div class="pc" id="cL"></div><div class="pc" id="cM"></div><div class="pc" id="cN"></div><div id="fd"></div>
+<div id="rn" hidden></div>
+<div id="hud"><div id="pb"><i></i></div><button id="vz">Voz: sí</button><button id="sd">Sonido: sí</button></div>
+<div id="db"><span id="nm"></span><p id="tx" aria-live="polite"></p><span id="ar">▼</span></div>
+<div class="ov t" id="ov"><h1>El rastro de la cita fantasma</h1><p>Una frase viral, un estudio que nadie cita y una pregunta: ¿qué dice realmente la evidencia?<br>Camina por la biblioteca tocando el suelo, las puertas y los objetos (o con las flechas ← →). Avanza los diálogos con clic, Espacio o Enter. Usa auriculares si puedes; las voces dependen de las voces en español de tu navegador. Mejor en horizontal.</p><button class="pri" id="go">Comenzar</button></div></div>
+<script>
+const K={ink:'#5b3a2e',cr:'#fbf1d9',or:'#f2a65a',mu:'#f0c75e',co:'#d9694f',mi:'#9ed0b0',tl:'#4f9aa6'},PAL=['#7d9f6b','#c9694f','#e3b95a','#5f8fa0','#a8738f'];
+const C={L:{n:'Lucía',s:'#b9774f',h:'#2e1b12',t:'#d9a62e',u:'#1f6f73',p:'#26303b',c:'#d9a62e'},N:{n:'Nicolás',s:'#a06a48',h:'#141010',t:'#1c2d52',u:'#c9694b',p:'#3d6a9a',c:'#c9694b'},M:{n:'Mara',s:'#c98e66',h:'#1a1414',t:'#a3bf9f',u:'#f3ead3',p:'#2b2f3a',c:'#a3bf9f'}};
+function fig(k,m){const c=C[k],H=c.h,br={n:['M70 99Q82 94 94 99','M106 99Q118 94 130 99'],w:['M70 103L94 95','M106 95L130 103'],o:['M70 93Q82 87 94 93','M106 93Q118 87 130 93'],s:['M70 98Q82 93 94 98','M106 98Q118 93 130 98']}[m],
+mo={n:'M89 141Q100 144 111 141',s:'M84 136Q100 154 116 136',w:'M89 146Q100 138 111 146',o:'M94 140Q100 153 106 140Q100 135 94 140'}[m],
+back=k=='L'?'<path d="M50 112Q46 56 100 52Q154 56 150 112L158 196Q132 206 128 150L72 150Q68 206 42 196Z" fill="'+H+'"/>':k=='M'?'<circle cx="100" cy="46" r="22" fill="'+H+'"/><path d="M52 112Q50 62 100 58Q150 62 148 112Z" fill="'+H+'"/>':'',
+front='<path d="M54 108Q56 60 100 58Q144 60 146 108Q128 82 100 82Q72 82 54 108Z" fill="'+H+'"/>'+(k=='N'?[[68,68],[88,57],[112,57],[132,68]].map(p=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="11" fill="'+H+'"/>').join(''):'')+(k=='M'?'<path d="M64 90Q80 70 98 64M120 66Q134 74 140 92" stroke="#c9ced2" stroke-width="3" fill="none"/>':''),
+gl=k=='N'?'<rect x="67" y="101" width="30" height="22" rx="4"/><rect x="103" y="101" width="30" height="22" rx="4"/>':k=='M'?'<circle cx="82" cy="113" r="14"/><circle cx="118" cy="113" r="14"/>':'',
+leg=(x,q)=>'<g class="'+q+'"><rect x="'+x+'" y="326" width="38" height="106" rx="6" fill="'+c.p+'"/><path d="M'+(x-4)+' 432h46q4 12-4 14h-40q-6-2-2-14z" fill="#5b3a2e"/></g>',
+arm=(x,q)=>'<g class="'+q+'"><rect x="'+x+'" y="208" width="26" height="114" rx="13" fill="'+c.t+'"/><circle cx="'+(x+13)+'" cy="328" r="11" fill="'+c.s+'"/></g>';
+return '<svg viewBox="0 0 200 470"><g stroke="#4a2f25" stroke-width="2" stroke-linejoin="round">'+back+leg(62,'l1')+leg(100,'l2')+'<path d="M50 205Q100 192 150 205L158 '+(k=='M'?376:338)+'H42Z" fill="'+c.t+'"/><path d="M84 200L100 244L116 200Z" fill="'+c.u+'"/>'+arm(24,'a1')+arm(150,'a2')+'<rect x="88" y="168" width="24" height="36" fill="'+c.s+'"/><ellipse cx="100" cy="110" rx="44" ry="54" fill="'+c.s+'"/>'+front+'<path d="M100 118Q96 130 102 131" stroke="#0004" fill="none" stroke-width="2"/><g stroke="none"><circle cx="70" cy="128" r="8" fill="#e8806f" opacity=".35"/><circle cx="130" cy="128" r="8" fill="#e8806f" opacity=".35"/><ellipse cx="82" cy="113" rx="6.5" ry="7.5" fill="#fff"/><ellipse cx="118" cy="113" rx="6.5" ry="7.5" fill="#fff"/><circle cx="82" cy="114" r="4.6" fill="#4a2f25"/><circle cx="118" cy="114" r="4.6" fill="#4a2f25"/><circle cx="83.8" cy="111.8" r="1.7" fill="#fff"/><circle cx="119.8" cy="111.8" r="1.7" fill="#fff"/></g><path d="'+br[0]+br[1]+'" stroke="'+H+'" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="'+mo+'" stroke="#4a1d16" stroke-width="3" fill="'+(m=='o'?'#4a1d16':'none')+'" stroke-linecap="round"/><g stroke="#22262b" stroke-width="2.5" fill="#ffffff14">'+gl+'</g></g></svg>'}
+const rc=(x,y,w,h,f,r,o)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(r||0)+'" fill="'+f+'"'+(o?' opacity="'+o+'"':'')+'/>',ci=(x,y,r,f,o)=>'<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+f+'"'+(o?' opacity="'+o+'"':'')+'/>';
+const door=(u,t)=>'<path d="M'+(u-9)+' 70V43a9 9 0 0 1 18 0V70z" fill="#a8683a"/><path d="M'+(u-6)+' 70V44a6 6 0 0 1 12 0V70z" fill="#c4854f"/>'+ci(u+4,58,1.2,K.mu)+rc(u-10,25,20,6,'#7a5232',2)+'<text x="'+u+'" y="29.3" font-size="2.4" fill="#fbf1d9" text-anchor="middle" stroke="none" font-family="Georgia,serif">'+t+'</text>';
+function books(x,y,w,n){let s=rc(x,y,w,n*8+2,'#7a5232',1);for(let r=0;r<n;r++){s+=rc(x+1,y+1+r*8,w-2,7,'#4a3020');for(let b=0;b<w-4;b+=3)s+=rc(x+1.5+b,y+2.2+r*8+b%2,2.4,5.8-b%2,PAL[(b/3+r)%5],.4)}return s}
+const table=u=>'<ellipse cx="'+u+'" cy="63" rx="24" ry="5" fill="#c4854f"/><ellipse cx="'+u+'" cy="62" rx="24" ry="4.2" fill="#d9a066"/>'+rc(u-3,66,6,10,'#8a5a36',2)+rc(u-10,75,20,2.4,'#8a5a36',1)+rc(u-14,59,9,3.4,K.cr,.5)+rc(u-3,58.5,9,3,K.mi,.5)+ci(u+16,62,2,K.cr)+'<path d="M'+(u+8)+' 61q0-8 6-8t6 8z" fill="#f0c75e"/>'+ci(u+14,57,9,'url(#gw)')+ci(u-30,71,4,K.co)+ci(u+30,71,4,K.co),
+pcs=u=>rc(u-26,60,52,4,'#c4854f',1)+rc(u-24,64,3,8,'#8a5a36')+rc(u+21,64,3,8,'#8a5a36')+[-16,0,16].map(d=>rc(u+d-6,48,12,10,'#e8dcc0',3)+rc(u+d-5,49,10,7,'#8fe0d0',2)+ci(u+d,70,3.5,K.tl)).join(''),
+tab=u=>rc(u-12,28,24,16,'#c4854f',2)+rc(u-9,31,7,5,K.cr)+rc(u-1,31,8,5,K.mi)+rc(u-9,38,9,4,K.mu)+rc(u+2,38,6,4,K.co),
+pl=u=>ci(u,56,7,'#6aa56a')+ci(u-5,52,5,'#86bd7a')+ci(u+5,53,5,'#4f8a5a')+rc(u-4,62,8,8,K.co,2),
+prn=u=>rc(u-8,57,16,9,'#e8dcc0',2)+rc(u-6,54,12,3,K.cr)+rc(u-9,66,18,4,'#8a5a36',1),
+cat=u=>rc(u-2,58,4,12,'#8a5a36')+rc(u-8,45,16,13,'#e8dcc0',3)+rc(u-6,47,12,8,'#8fe0d0',2);
+function art(k){const d=k=='lecd',n=d?'lec':k,W={pas:'#a9c6a3',lec:d?'#cfe3d0':'#e6c9a0',con:'#a7cbc9',est:'#c9a98a'}[n],sk=d?['#8ec9ec','#eaf6ef']:['#f2a65a','#f9e2b0'],
+win=u=>{const id='w'+u,p='M'+(u-14)+' 52V26a14 14 0 0 1 28 0V52z';return '<clipPath id="'+id+'"><path d="'+p+'"/></clipPath><g clip-path="url(#'+id+')">'+rc(u-14,12,28,40,'url(#sk)')+ci(u+6,30,7,'#fff7d6',.8)+'<ellipse cx="'+(u-5)+'" cy="28" rx="8" ry="2.6" fill="#fff" opacity=".85"/><ellipse cx="'+(u+4)+'" cy="25" rx="6" ry="2" fill="#fff" opacity=".8"/><ellipse cx="'+u+'" cy="53" rx="22" ry="9" fill="#8fc08a"/><ellipse cx="'+(u+8)+'" cy="56" rx="20" ry="8" fill="#5f9a62"/>'+ci(u-8,45,4,'#4f8a5a')+ci(u-5,42,3.5,'#6aa56a')+'</g><path d="'+p+'M'+u+' 12V52M'+(u-14)+' 36H'+(u+14)+'" fill="none" stroke="#7a5232" stroke-width="1.1"/><path d="M'+(u-12)+' 38L'+(u+34)+' 100H'+(u-36)+'Z" fill="#fff3c4" opacity=".15" stroke="none"/>'},
+X={pas:door(22,'LECTURA')+door(80,'CONSULTA')+door(138,'ESTANTERÍAS')+tab(51)+pl(108)+pl(8)+pl(152)+ci(51,17,4.5,K.cr)+'<path d="M51 17V14M51 17l2.5 1.5" fill="none"/>',
+lec:win(40)+win(134)+door(11,'PASILLO')+table(80)+pl(152)+pl(112),
+con:door(11,'PASILLO')+win(36)+rc(96,20,40,22,'#f2e6c9',2)+rc(100,24,14,6,K.mi)+rc(118,24,14,6,K.mu)+rc(100,34,32,3,K.tl)+pcs(64)+prn(144),
+est:door(11,'PASILLO')+[26,50,74,98,122].map(x=>books(x,20,24,5)).join('')+cat(150)+'<path d="M130 6L158 100H100Z" fill="#fff3c4" opacity=".13" stroke="none"/>'}[n];
+let s='<svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+sk[0]+'"/><stop offset="1" stop-color="'+sk[1]+'"/></linearGradient><radialGradient id="gw"><stop offset="0" stop-color="#fff1b8" stop-opacity=".85"/><stop offset="1" stop-color="#fff1b8" stop-opacity="0"/></radialGradient><linearGradient id="wl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient><filter id="pt"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.8"/></filter></defs><g filter="url(#pt)" stroke="#5b3a2e" stroke-opacity=".35" stroke-width=".3">'+rc(-4,-4,168,76,W)+rc(-4,-4,168,76,'url(#wl)')+rc(-4,56,168,14,'#7a5232',0,.18)+rc(-4,68,168,2.5,'#8a5a36')+rc(-4,70,168,34,'#c99a63');
+for(let x=-80;x<=240;x+=20)s+='<path d="M'+(80+(x-80)*.4)+' 70L'+x+' 100" fill="none" stroke="#8a5a36" stroke-opacity=".3"/>';
+[77,85,95].forEach(y=>s+='<path d="M0 '+y+'H160" fill="none" stroke="#8a5a36" stroke-opacity=".28"/>');
+s+=rc(-4,-4,168,10,'#8a5a36');[25,80,135].forEach(x=>s+='<path d="M'+x+' 6V10" fill="none"/>'+ci(x,13,9,'url(#gw)')+ci(x,12,3.2,'#f9e7a6'));
+return s+X+'</g></svg>'}
+const Q=[
+{id:'d1',t:'Desafío 1: ¿qué estamos intentando comprobar?',q:'Antes de buscar, ¿qué conviene hacer para convertir la frase en una necesidad de información investigable?',o:[
+['Copiar la frase exacta y asumir que el primer resultado que coincida es el estudio original.',0,'Buscar la frase exacta sirve como primer paso, pero una coincidencia no garantiza que sea el estudio original ni que esté bien atribuida.'],
+['Separar la afirmación en conceptos clave (duración del sueño, rendimiento académico, estudiantes) y aclarar qué relación se quiere verificar.',1],
+['Buscar solo “40 %” para localizar la cifra.',0,'La cifra aislada es ambigua: no dice qué se midió, en quiénes ni cómo.'],
+['Descartar la frase sin buscar, porque una publicación en redes no puede ser válida.',0,'Puede ser poco confiable, pero ofrece pistas para rastrear una fuente. No es evidencia hasta verificarla.']],
+e:'Exacto. Una búsqueda efectiva parte de una necesidad clara: identificar los conceptos principales ayuda a generar términos y consultas útiles.'},
+{id:'d2',t:'Misión 1: diseñar la consulta',q:'¿Qué consulta combina mejor los conceptos y sus sinónimos para buscar estudios sobre sueño y rendimiento en estudiantes?',o:[
+['<code>sleep duration AND sleep hours AND academic performance AND academic achievement AND students</code>',0,'Con AND entre todos los sinónimos, cada resultado debe contenerlos todos y se pierden estudios relevantes. Prueba OR entre términos equivalentes.'],
+['<code>(sleep duration OR sleep hours) AND (academic performance OR academic achievement) AND students</code>',1],
+['<code>sleep duration OR academic performance OR students</code>',0,'Con OR entre todos los conceptos basta con que aparezca uno: llegarán muchos resultados que no relacionan sueño y rendimiento.'],
+['<code>"sleep duration" AND "academic performance"</code>',0,'Es posible, pero muy estrecha: sin sinónimos ni población salen pocos resultados. Agrega alternativas agrupadas con OR.']],
+e:'Eso es. OR reúne sinónimos, AND conecta conceptos distintos y los paréntesis agrupan alternativas. Revisa la sintaxis de cada plataforma, porque puede variar.'},
+{id:'d3',t:'Misión 2 y 3: dónde buscar y cómo avanzar',q:'El buscador general solo muestra páginas que repiten la frase. ¿Cuál es el siguiente paso más adecuado?',o:[
+['Seguir revisando páginas del buscador general hasta hallar una que repita la frase con más detalles.',0,'Que una afirmación se repita no demuestra que venga de un estudio. Úsalas solo como pistas y sigue en recursos académicos.'],
+['Consultar una base académica o los recursos de la biblioteca, revisar títulos y resúmenes, usar filtros pertinentes y, si un artículo no está disponible, buscarlo por el acceso institucional o el repositorio.',1],
+['Filtrar solo por “texto completo” y asumir que lo restante es confiable y pertinente.',0,'Tener el texto completo no indica que el documento sea pertinente ni confiable. Primero revisa qué estudia y cómo.'],
+['Elegir el primer resultado con título parecido y citarlo sin leer el resumen.',0,'Un título parecido puede ocultar otra población, método o pregunta. Lee el resumen antes de decidir.']],
+e:'Bien. La fuente debe responder a la necesidad; los filtros refinan, pero no certifican calidad, y el resumen te dice si vale la pena recuperar el texto completo.'},
+{id:'d4',t:'Misión 4: elige la ruta de verificación',q:'Tienes una revisión con bibliografía. ¿Qué estrategia eliges? Tu decisión cambia el recorrido.',o:[
+['Revisar la bibliografía para hallar estudios anteriores y, si la plataforma lo permite, buscar trabajos posteriores que la citen.',1],
+['Usar solo la lista de referencias: los artículos posteriores no aportan nada.',2,'Ruta de referencias anteriores: hallas un estudio más antiguo. Aun así, conviene mirar trabajos posteriores para ver cómo se discutió la evidencia. Puedes continuar.'],
+['Citar la revisión como prueba directa de la cifra sin ver qué estudios incluye.',0,'Ruta de revisión pendiente: una revisión sintetiza estudios, pero no confirma esa cifra. Consulta qué evidencia presenta.'],
+['Dejar de buscar: si el título coincide con el tema, ya está verificado.',0,'Ruta de revisión pendiente: la coincidencia temática no basta; puede tratar otra población o responder otra pregunta.']],
+e:'Ruta de rastreo bibliográfico: las referencias llevan hacia atrás y las citas posteriores hacia adelante. Después hay que leer qué midió cada estudio, en quiénes y con qué resultado.'},
+{id:'d5',t:'Desafío final: ¿qué podemos afirmar con la evidencia?',q:'¿Cuál es la decisión más responsable antes de entregar el trabajo?',o:[
+['Conservar la frase y citar el estudio, porque ambos tratan sobre sueño y rendimiento.',0,'Compartir el tema no equivale a respaldar la misma afirmación. ¿Qué población estudió el artículo y qué midió?'],
+['Reescribir la afirmación según la población, el resultado y los límites del estudio, y registrar la referencia completa.',1],
+['Mantener el 40 % como dato general y quitar la referencia para no atribuirla mal.',0,'Quitar la referencia no corrige el problema: la cifra sigue sin evidencia verificable.'],
+['Cambiar la frase por una conclusión más contundente para convencer más.',0,'Una conclusión más fuerte que la evidencia distorsiona los resultados. Comunica con precisión, no con exageración.']],
+e:'Esa es la decisión. La cita fantasma deja de ser una afirmación sin origen: la nueva redacción respeta la población y el resultado, y lleva autoría, año, título, publicación y enlace.'}];
+let P=[['rm','lec','LN'],['n','Biblioteca universitaria, al final de la tarde.'],
+['d','L','Estoy trabajando sobre sueño y rendimiento académico. Encontré una frase que parece perfecta para empezar.','s'],
+['d','N','Si la frase ya resume la idea, úsala. Seguro que el estudio existe.','s'],['ch','LNM'],
+['d','M','Antes de citarla, ¿qué sabemos de esa fuente?'],
+['d','L','No mucho. Dice: “Dormir menos de seis horas reduce el rendimiento académico un 40 %”. Solo menciona “un estudio universitario”.','w'],
+['n','No hay autor, año, título ni enlace. ¿Ayudarás a Lucía a verificarla antes de que la cite?'],['q',0],
+['d','L','Entonces separemos la afirmación: duración del sueño, rendimiento académico y estudiantes.'],
+['ex','pc'],['rm','con','LNM'],['d','N','Busquemos la frase exacta entre comillas. Si aparece en muchas páginas, será fácil confirmarla.','s'],
+['d','M','Puede ser un primer intento, pero muchas páginas repiten la misma afirmación sin citar el estudio original.'],
+['d','L','Entonces necesitamos averiguar qué palabras usar y dónde buscar.'],
+['d','M','Puedes usar operadores para indicar cómo se relacionan los términos. AND combina conceptos; OR reúne sinónimos.'],['q',1],
+['d','L','Salen resultados manejables. Ahora, ¿dónde seguimos buscando?'],
+['d','N','El buscador general ya nos dio muchas páginas. ¿No es suficiente?'],
+['d','M','Ayuda a orientarse, pero para literatura académica conviene buscar también en bases de datos y en los recursos de la biblioteca.'],['q',2],
+['d','L','Encontré varios artículos. Uno solo muestra el resumen: lo recuperaré por el acceso institucional o el catálogo.','s'],
+['ex','est1'],['rm','est','LNM'],['n','Entre las estanterías, Lucía abre una revisión y su bibliografía.'],
+['d','L','Esta revisión cita varios estudios. ¿Podemos usarla para encontrar los originales?'],
+['d','N','Aquí aparece el porcentaje, pero el estudio se hizo con adolescentes, no con universitarios.','o'],
+['d','L','Entonces la coincidencia de palabras no significa que la fuente respalde nuestra afirmación.'],['q',3],
+['ex','mesa'],['rm','lec','LNM','mesa'],['n','La frase viral y los documentos recuperados, lado a lado. El plazo se acerca.'],
+['d','L','Encontramos un estudio que informa una asociación entre sueño y resultados académicos, pero no afirma que dormir menos de seis horas reduzca el rendimiento un 40 % en todos los estudiantes.','w'],
+['d','N','Entonces, ¿la publicación exageró el hallazgo?','o'],
+['d','M','Tal vez. Compara con cuidado población, medida, resultado y contexto.'],['q',4],
+['rm','lecd','LNM'],['n','Al día siguiente, la biblioteca está luminosa y ordenada.'],
+['d','L','No encontramos respaldo para el “40 %” tal como estaba escrito. Sí encontramos estudios con resultados y poblaciones concretas.','s'],
+['d','N','La nueva frase es menos espectacular, pero ahora sabemos de dónde sale y qué significa.','s'],
+['d','M','Eso es investigar: no obligar a la evidencia a decir lo que queremos, sino ajustar las conclusiones a lo que las fuentes permiten afirmar.','s'],
+['d','N','Pensaba que buscar era escribir una pregunta y abrir el primer resultado.'],
+['d','L','La próxima vez que encuentre una cita impactante, mi primera pregunta será: “¿Dónde está la fuente original y qué dice realmente?”.','s']];
+const $=i=>document.getElementById(i);let i=0,cho=1,typ=null,full='',errs={},AC,MG,pad=[],mute=0,mood={L:'n',N:'n',M:'n'};
+function au(){if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.connect(AC.destination)}if(AC.state=='suspended')AC.resume()}
+function tone(f,d,ty,v,t){if(!AC)return;t=AC.currentTime+(t||0);const o=AC.createOscillator(),g=AC.createGain();o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.07,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(MG);o.start(t);o.stop(t+d)}
+let NB,AN=[],AT=0;
+function noise(){if(!NB){NB=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);const d=NB.getChannelData(0);for(let k=0;k<d.length;k++)d[k]=Math.random()*2-1}return NB}
+function nz(d,ft,f,v,t){t=AC.currentTime+(t||0);const s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain();s.buffer=noise();fl.type=ft;fl.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(fl);fl.connect(g);g.connect(MG);s.start(t,Math.random());s.stop(t+d)}
+const AM={lib:{r:[380,.05],p:[196,247,294,'sine',.02],e:[[5500,()=>nz(.35,'highpass',3000,.07)],[9000,()=>{tone(90,.12,'sine',.05);tone(90,.12,'sine',.045,.5)}]]},
+dig:{r:[900,.035],p:[220,277,330,'triangle',.012],e:[[1600,()=>{for(let j=0;j<5;j++)tone(2200+Math.random()*700,.02,'square',.012,j*.08+Math.random()*.05)}],[13000,()=>tone(1320,.5,'sine',.03)]]},
+est:{r:[260,.04],p:[175,220,262,'sine',.016],e:[[8000,()=>nz(.35,'highpass',3000,.05)],[12000,()=>{[0,.55,1.1].forEach(t=>tone(80,.12,'sine',.045,t))}]]},
+mesa:{r:[220,.035],p:[82,123,165,'triangle',.03],e:[[1000,()=>tone(1800,.03,'square',.03),1],[2800,()=>{tone(55,.22,'sine',.12);tone(55,.22,'sine',.09,.3)},1]]},
+dia:{r:[700,.03],p:[262,330,392,'sine',.02],e:[[2600,()=>{const f=2400+Math.random()*1500;[0,.13,.26].forEach(t=>tone(f*(1+t/2),.08,'sine',.022,t))}]]}};AM.mos=AM.lib;
+function amb(k){if(!AC)return;AT++;const my=AT;AN.forEach(n=>{try{n.g.gain.linearRampToValueAtTime(0,AC.currentTime+1.2);n.o.stop(AC.currentTime+1.3)}catch(e){}});AN=[];const a=AM[k],s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain();
+ s.buffer=noise();s.loop=true;fl.type='lowpass';fl.frequency.value=a.r[0];g.gain.value=0;g.gain.linearRampToValueAtTime(a.r[1],AC.currentTime+2);s.connect(fl);fl.connect(g);g.connect(MG);s.start();AN.push({o:s,g});
+ a.p.slice(0,3).forEach(f=>{const o=AC.createOscillator(),gg=AC.createGain();o.type=a.p[3];o.frequency.value=f;gg.gain.value=0;gg.gain.linearRampToValueAtTime(a.p[4],AC.currentTime+2);o.connect(gg);gg.connect(MG);o.start();AN.push({o,g:gg})});
+ a.e.forEach(x=>{const run=()=>{if(AT!=my)return;x[1]();setTimeout(run,x[2]?x[0]:x[0]*(.6+Math.random()*.8))};setTimeout(run,x[0]*Math.random()+500)})}
+const BL={L:520,N:330,M:420};
+$('sd').onclick=e=>{e.stopPropagation();mute=!mute;if(MG)MG.gain.value=mute?0:1;$('sd').textContent='Sonido: '+(mute?'no':'sí')};
+function vis(s){['L','N','M'].forEach(k=>$('c'+k).classList.toggle('on',s.includes(k)))}
+function hi(w){['L','N','M'].forEach(k=>{const e=$('c'+k);e.classList.toggle('dim',!!w&&k!=w);e.classList.toggle('sp',k==w)})}
+function say(s){const n=s[0]=='n',w=n?'':s[1],t=n?s[1]:s[2],db=$('db');db.style.display='block';db.className=n?'n':'';
+ const nm=$('nm');nm.style.display=n?'none':'block';if(!n){nm.textContent=C[w].n;nm.style.background=C[w].c;db.style.borderColor=C[w].c;mood[w]=s[3]||'n';$('c'+w).innerHTML=fig(w,mood[w])}else db.style.borderColor='#8fa6ad';
+ hi(w);full=t;speak(w,t);const tx=$('tx');tx.textContent='';let k=0;const f=n?200:BL[w];
+ if(matchMedia('(prefers-reduced-motion:reduce)').matches){tx.textContent=t;return}
+ typ=setInterval(()=>{tx.textContent=t.slice(0,++k);if(k%3==0)tone(f*(1+(k%2)*.06),.05,n?'triangle':'square',.025);if(k>=t.length)fin()},VO?28:20)}
+function fin(){clearInterval(typ);typ=null;$('tx').textContent=full}
+function adv(){if(cho)return;if(typ){fin();return}stopV();step()}
+function step(){if(!stk.length)$('pb').firstChild.style.width=i/P.length*100+'%';const s=P[i++];if(!s)return end();if(s[0]=='x'){[P,i]=stk.pop();cho=1;$('db').style.display='none';hi('');return s[1]()}if(s[0]=='rm')return rm(s[1],s[2],s[3]);if(s[0]=='ex')return explore(s[1]);
+ if(s[0]=='ch'){chs(s[1]);return step()}if(s[0]=='q')return ask(Q[s[1]]);say(s)}
+function ask(q){cho=1;$('db').style.display='none';const o=$('ov');o.hidden=false;o.className='ov';
+ o.innerHTML='<h2>'+q.t+'</h2><p>'+q.q+'</p>'+q.o.map((x,k)=>[k,x]).sort(()=>Math.random()-.5).map(a=>'<button class="op" data-k="'+a[0]+'">'+a[1][0]+'</button>').join('')+'<div id="fb"></div>';o.scrollTop=0;
+ o.querySelectorAll('.op').forEach(b=>b.onclick=()=>{const x=q.o[b.dataset.k],v=x[1],f=$('fb');
+  if(v){tone(660,.25,'sine',.09);tone(880,.25,'sine',.09,.12);tone(1320,.4,'sine',.08,.25);o.querySelectorAll('.op').forEach(e=>e.disabled=true);b.classList.add('on');
+   f.innerHTML='<div class="fb ok"><b>Mara:</b> '+(v==2?x[2]:q.e)+'</div><button class="pri" id="cn">Continuar</button>';speak('M',v==2?x[2]:q.e);$('cn').focus();$('cn').onclick=ev=>{ev.stopPropagation();o.hidden=true;cho=0;step()}}
+  else{tone(150,.35,'sawtooth',.06);errs[q.id]=(errs[q.id]||0)+1;speak('M',x[2]);b.disabled=true;f.innerHTML='<div class="fb no"><b>Mara:</b> '+x[2]+' Inténtalo de nuevo.</div>'}})}
+let VO=1,V=[],stk=[];
+function lv(){const r=['es-co','es-419','es-us','es-mx'],f=x=>{const j=r.indexOf(x.lang.replace('_','-').toLowerCase());return j<0?9:j};V=speechSynthesis.getVoices().filter(v=>/^es/i.test(v.lang)).sort((a,b)=>f(a)-f(b))}
+if('speechSynthesis'in window){lv();speechSynthesis.onvoiceschanged=lv}else{VO=0;$('vz').textContent='Voz: no disponible'}
+const FE=/female|mujer|helena|laura|paulina|sabina|m[oó]nica|luc[ií]a|elvira|dalia|salom[eé]|paloma|marisol|sof[ií]a|camila|valentina|paola|isabela|elena|marina/i,MA=/hombre|jorge|diego|pablo|ra[uú]l|[aá]lvaro|carlos|enrique|andr[eé]s|gonzalo|tom[aá]s|juan|miguel|alonso|male/i,VP={L:[1.2,1.02,'F',0],N:[.8,1,'M',0],M:[1.02,.92,'F',1]};
+function stopV(){if('speechSynthesis'in window)speechSynthesis.cancel()}
+function speak(w,t){stopV();if(!VO||!w)return;const p=VP[w],a=V.filter(v=>p[2]=='F'?FE.test(v.name):MA.test(v.name)&&!FE.test(v.name)),v=a.length?a[p[3]%a.length]:V[0],u=new SpeechSynthesisUtterance(t.replace(/<[^>]+>/g,''));u.lang='es-CO';if(v){u.voice=v;u.lang=v.lang}u.pitch=p[0];u.rate=p[1];speechSynthesis.speak(u)}
+$('vz').onclick=e=>{e.stopPropagation();if(!('speechSynthesis'in window))return;VO=!VO;if(!VO)stopV();$('vz').textContent='Voz: '+(VO?'sí':'no')};
+
+const HS={pas:[['d1',14,11,'Zona de lectura','lec'],['d2',50,11,'Zona de consulta','con'],['d3',86,11,'Estanterías','est'],['tab',32,16,'Tablero de información']],
+lec:[['d0',7,10,'Pasillo','pas'],['mesa',50,30,'Mesa de lectura'],['ven',84,18,'Ventanal']],
+con:[['d0',7,10,'Pasillo','pas'],['pc',40,34,'Computadores de consulta'],['imp',90,11,'Escáner e impresora']],
+est:[['d0',7,10,'Pasillo','pas'],['est1',55,15,'Estantería de la colección'],['cat',94,8,'Catálogo']]};
+const OR={pc:'con',est1:'est',mesa:'lec'},NP={con:['N',66],est:['M',70]},AMB={pas:'lib',lec:'lib',con:'dig',est:'est',lecd:'dia'},RN={pas:'Pasillo central',lec:'Zona de lectura',con:'Zona de consulta e investigación',est:'Zona de estanterías'};
+const FL={tab:[['n','Tablero de la biblioteca: horarios, normas de silencio y un plano con las zonas de lectura, consulta y estanterías.']],mesa:[['d','L','Mi mesa de lectura. Aquí empezó todo, con una frase sin fuente.','w']],ven:[['n','Por el ventanal entra la luz sobre las lámparas redondas de la sala.']],pc:[['d','L','Aquí consulto las bases de datos y el catálogo de la biblioteca.']],imp:[['n','Un escáner y una impresora: sirven para copiar o imprimir, según las normas de la biblioteca.']],est1:[['d','L','Las estanterías ordenan la colección. Cada libro tiene una ubicación en el catálogo.']],cat:[['n','Un terminal del catálogo: allí se consulta si un libro existe y en qué lugar está.']]};
+const TP={N:[['¿Qué estás buscando aquí?',[['d','N','Probaba con frases completas en el buscador. Salen muchísimos resultados, pero casi ninguno dice de qué estudio proviene la cifra.','w'],['d','N','Mara me enseñó que conviene separar la idea en conceptos y buscar sus sinónimos.','s']]],['¿Algún truco para buscar?',[['d','N','Guardo la consulta y la base donde la usé. Así puedo repetir la búsqueda y explicar cómo llegué a cada fuente.','s']]]],
+M:[['¿Cómo encuentro un libro?',[['d','M','Empieza por el catálogo de la biblioteca: allí verás si existe, si está disponible y en qué lugar de la colección se encuentra.'],['d','M','Con esa ubicación llegas a la estantería correcta.','s']]],['¿Y si no está disponible?',[['d','M','Pregunta en el mostrador. Según los servicios de tu biblioteca, pueden ayudarte a conseguirlo por otra vía, como un repositorio o un préstamo entre bibliotecas.']]],['¿Cómo registro las fuentes que uso?',[['d','M','Anota autoría, año, título, publicación y un enlace o identificador persistente.'],['d','M','Un registro claro permite que otras personas repitan tu búsqueda.','s']]]]};
+const CR=[['Autoría y curaduría de contenidos','Diana Lucia Cortés Bedoya'],['Orientaciones para el diseño de la ruta de trabajo de la narrativa digital','Chatgpt'],['Banco de prompt para desarrollar la narrativa digital con IA','Chatgpt'],['Generación de la idea narrativa','Manus'],['Construcción del guión narrativo','Manus'],['Creación de preguntas y decisiones interactivas','Manus'],['Creación de personajes e imagenes con IA','Manus'],['Sonido y Audio','Manus'],['Diseño de la experiencia en railway','Manus']];
+let rmk='lec',pos={L:24,N:50,M:76},obj=null,ex=0,wi=null;
+const cl=(x)=>Math.max(6,Math.min(94,x));
+function place(k,x){const e=$('c'+k);pos[k]=x;e.style.transition='none';e.style.left=(x-6.75)+'%';void e.offsetWidth;e.style.transition=''}
+function mv(k,x,cb){const e=$('c'+k),a=e.getBoundingClientRect(),b=$('st').getBoundingClientRect();pos[k]=(a.left+a.width/2-b.left)/b.width*100;const d=Math.abs(x-pos[k])/24;
+ e.style.transition='opacity .4s,filter .3s,left '+d+'s linear';e.classList.add('wk');e.style.left=(x-6.75)+'%';pos[k]=x;clearTimeout(e.t);clearInterval(wi);if(k=='L')wi=setInterval(()=>tone(90,.07,'sine',.05),280);
+ e.t=setTimeout(()=>{e.classList.remove('wk');if(k=='L')clearInterval(wi);cb&&cb()},d*1000+30)}
+function chs(s){['L','N','M'].forEach(k=>{const e=$('c'+k);if(s.includes(k)&&!e.classList.contains('on')){const x=pos[k];e.style.transition='none';e.style.left='-16%';void e.offsetWidth;e.classList.add('on');mv(k,x)}})}
+function fade(m,d){const f=$('fd');f.style.opacity=1;setTimeout(()=>{m();f.style.opacity=0;if(d)setTimeout(d,350)},360)}
+function rm(r,s,a){cho=1;stopV();$('db').style.display='none';fade(()=>{rmk=r;$('bg').innerHTML=art(r);ex=0;hsr();[['L',24],['N',50],['M',76]].forEach(p=>place(p[0],p[1]));vis(s||'');hi('');amb(a||AMB[r])},()=>{cho=0;step()})}
+function tg(){if(!obj)return null;const o=OR[obj];if(o==rmk)return obj;const d=HS[rmk].find(x=>x[4]==(rmk=='pas'?o:'pas'));return d&&d[0]}
+function hsr(){const h=$('hs');$('rn').hidden=!ex;['N','M'].forEach(k=>$('c'+k).classList.toggle('tk',!!(ex&&NP[rmk]&&NP[rmk][0]==k)));
+ if(!ex||!HS[rmk]){h.innerHTML='';return}const t=tg(),s=HS[rmk].find(x=>x[0]==t);$('rn').textContent=RN[rmk]+': toca el suelo para caminar, y puertas u objetos para interactuar';
+ h.innerHTML=HS[rmk].map(x=>'<button class="hs" data-i="'+x[0]+'" aria-label="'+x[3]+'" style="left:'+(x[1]-x[2]/2)+'%;width:'+x[2]+'%"></button>').join('')+(s?'<div class="sr" style="left:'+s[1]+'%">★</div>':'');
+ h.querySelectorAll('.hs').forEach(b=>b.onclick=ev=>{ev.stopPropagation();act(HS[rmk].find(x=>x[0]==b.dataset.i))})}
+function explore(id){obj=id;ex=1;cho=1;stopV();$('db').style.display='none';hi('');const n=NP[rmk];vis('L'+(n?n[0]:''));if(n)place(n[0],n[1]);hsr()}
+function act(h){if(!ex)return;mv('L',cl(h[1]),()=>{if(h[4])go(h[4]);else if(h[0]==obj){obj=null;ex=0;hsr();step()}else sub(FL[h[0]],()=>{ex=1;cho=1;hsr()})})}
+function go(to){const from=rmk;ex=0;cho=1;hsr();if(AC){nz(.5,'lowpass',900,.08);tone(180,.2,'triangle',.05)}
+ fade(()=>{rmk=to;$('bg').innerHTML=art(to);const d=HS[to].find(x=>x[4]==from),n=NP[to];place('L',d?d[1]+(to=='pas'?0:9):26);if(n)place(n[0],n[1]);vis('L'+(n?n[0]:''));amb(AMB[to]);ex=1;hsr()})}
+function sub(a,cb){stk.push([P,i]);P=a.concat([['x',cb]]);i=0;ex=0;cho=0;step()}
+function talk(k){ex=0;cho=1;const o=$('ov');o.hidden=false;o.className='ov m';o.innerHTML='<div class="mn"><h2>Hablar con '+C[k].n+'</h2>'+TP[k].map((x,j)=>'<button class="op" data-j="'+j+'">'+x[0]+'</button>').join('')+'<button class="pri" id="bk">Seguir explorando</button></div>';
+ o.querySelectorAll('.op').forEach(b=>b.onclick=ev=>{ev.stopPropagation();o.hidden=true;sub(TP[k][b.dataset.j][1],()=>talk(k))});
+ $('bk').onclick=ev=>{ev.stopPropagation();o.hidden=true;ex=1;cho=1;hsr()}}
+function floor(e){const b=$('st').getBoundingClientRect();mv('L',cl((e.clientX-b.left)/b.width*100))}
+function end(){cho=1;ex=0;hsr();$('db').style.display='none';hi('');vis('LNM');if(AC){tone(523,.5,'sine',.08);tone(659,.5,'sine',.08,.15);tone(784,.8,'sine',.08,.3)}
+ const o=$('ov'),e=Object.values(errs).reduce((a,b)=>a+b,0);o.hidden=false;o.className='ov t';
+ o.innerHTML='<h1>Misión cumplida</h1><p>Una buena búsqueda no siempre confirma lo que esperabas. Su valor está en ayudarte a encontrar, evaluar y usar información de forma responsable.</p><p>'+(e?'Ajustaste tu estrategia '+e+(e>1?' veces':' vez')+': también eso es investigar.':'Verificaste antes de citar y no necesitaste corregir el rumbo.')+'</p><h2>Créditos</h2><p class="cr">'+CR.map(c=>'<b>'+c[0]+':</b> '+c[1]).join('<br>')+'</p><button class="pri" id="rs">Jugar de nuevo</button>';
+ $('rs').onclick=ev=>{ev.stopPropagation();i=0;errs={};obj=null;o.hidden=true;cho=0;step()}}
+['L','N','M'].forEach(k=>{$('c'+k).innerHTML=fig(k,'n');place(k,pos[k])});$('bg').innerHTML=art('lec');vis('LN');
+['N','M'].forEach(k=>$('c'+k).onclick=ev=>{if(ex){ev.stopPropagation();mv('L',cl(pos[k]-12),()=>talk(k))}});
+$('go').onclick=e=>{e.stopPropagation();au();$('ov').hidden=true;cho=0;step()};
+$('st').onclick=e=>ex?floor(e):adv();
+addEventListener('keydown',e=>{if(ex&&(e.key=='ArrowLeft'||e.key=='ArrowRight')){e.preventDefault();mv('L',cl(pos.L+(e.key=='ArrowLeft'?-14:14)))}else if(!cho&&[' ','Enter','ArrowRight'].includes(e.key)){e.preventDefault();adv()}});
+</script></body></html>
